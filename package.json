@@ -1,0 +1,14 @@
+{
+  "name": "@mussia-manager/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {
+    "@monodon/rust": "2.2.0"
+  },
+  "devDependencies": {
+    "@nx/workspace": "20.7.1",
+    "nx": "20.7.1"
+  }
+}

@@ -1,0 +1,19 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: my-app
+spec:
+  image: yurikrupnik/first-rust-app
+  interval: 1m
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: my-app
+spec:
+  imageRepositoryRef:
+    name: my-app
+  policy:
+    semver:
+      range: ">=1.0.0"
+#      sha-bed637e

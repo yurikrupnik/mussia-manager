@@ -1,0 +1,126 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: goodbye
+spec:
+  params:
+    - name: username
+      type: string
+  steps:
+    - name: echo
+      image: alpine
+      script: |
+        #!/bin/sh
+        echo "Goodbye $(params.username)!"
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: nx-build
+spec:
+  steps:
+    - name: echo
+      image: node
+      script: |
+        #!/bin/sh
+        pnpm i
+        pnpm nx run-many -t build --parallel --max-parallel=10 --prod
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: rust
+spec:
+  steps:
+    - name: build
+      image: rust
+      script: |
+        #!/bin/sh
+        cargo build
+    - name: test
+      image: rust
+      script: |
+        #!/bin/sh
+        cargo test
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: hello-task-run
+spec:
+  taskRef:
+    name: hello
+#    name: goodbye
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: rust-ci-run
+spec:
+  pipelineRef:
+    name: rust-ci-pipeline
+  params:
+    - name: git-url
+      value: "https://github.com/yourusername/your-rust-repo"
+    - name: git-revision
+      value: "main"
+    - name: build-profile
+      value: "debug"
+    - name: run-clippy
+      value: "true"
+    - name: create-binary
+      value: "false"
+  workspaces:
+    - name: source-code
+      persistentVolumeClaim:
+        claimName: rust-source-pvc
+    - name: cargo-cache
+      persistentVolumeClaim:
+        claimName: cargo-cache-pvc
+---
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: git-clone
+spec:
+  workspaces:
+    - name: output
+      description: The git repo will be cloned into this workspace
+  params:
+    - name: url
+      description: git url to clone
+      type: string
+    - name: revision
+      description: git revision to checkout (branch, tag, sha, ref…)
+      type: string
+      default: "main"
+  steps:
+    - name: git-clone
+      image: alpine/git:latest
+      script: |
+        git clone $(params.url) $(workspaces.output.path)
+        cd $(workspaces.output.path)
+        git checkout $(params.revision)
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rust-source-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cargo-cache-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

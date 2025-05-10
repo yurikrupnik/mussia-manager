@@ -1,0 +1,168 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: rust-ci-pipeline
+spec:
+  workspaces:
+    - name: source-code
+    - name: cargo-cache
+  params:
+    - name: git-url
+      type: string
+      description: Git repository URL containing the Rust code
+    - name: git-revision
+      type: string
+      description: Git revision to checkout (branch, tag, commit)
+      default: "main"
+    - name: build-profile
+      type: string
+      description: Cargo build profile (debug or release)
+      default: "debug"
+    - name: run-clippy
+      type: string
+      description: Whether to run clippy linting
+      default: "true"
+    - name: create-binary
+      type: string
+      description: Whether to create a binary artifact
+      default: "false"
+  tasks:
+    - name: git-clone
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: source-code
+
+    - name: check-format
+      runAfter: ["git-clone"]
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - name: cargo-fmt
+            image: rust:slim
+            workingDir: $(workspaces.source.path)
+            script: |
+              rustup component add rustfmt
+              cargo fmt -- --check || {
+                echo "Code formatting issues found. Run 'cargo fmt' to fix them."
+                exit 1
+              }
+      workspaces:
+        - name: source
+          workspace: source-code
+
+    - name: lint
+      runAfter: ["git-clone"]
+      when:
+        - input: "$(params.run-clippy)"
+          operator: in
+          values: ["true", "yes"]
+      taskSpec:
+        workspaces:
+          - name: source
+          - name: cache
+        steps:
+          - name: cargo-clippy
+            image: rust:slim
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: CARGO_HOME
+                value: $(workspaces.cache.path)
+            script: |
+              rustup component add clippy
+              cargo clippy -- -D warnings
+      workspaces:
+        - name: source
+          workspace: source-code
+        - name: cache
+          workspace: cargo-cache
+
+    - name: build
+      runAfter: ["check-format"]
+      taskSpec:
+        workspaces:
+          - name: source
+          - name: cache
+        steps:
+          - name: cargo-build
+            image: rust:slim
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: CARGO_HOME
+                value: $(workspaces.cache.path)
+            script: |
+              cargo build --$(params.build-profile)
+      workspaces:
+        - name: source
+          workspace: source-code
+        - name: cache
+          workspace: cargo-cache
+
+    - name: test
+      runAfter: ["build"]
+      taskSpec:
+        workspaces:
+          - name: source
+          - name: cache
+        steps:
+          - name: cargo-test
+            image: rust:slim
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: CARGO_HOME
+                value: $(workspaces.cache.path)
+            script: |
+              cargo test --$(params.build-profile)
+      workspaces:
+        - name: source
+          workspace: source-code
+        - name: cache
+          workspace: cargo-cache
+
+    - name: create-artifact
+      runAfter: ["test"]
+      when:
+        - input: "$(params.create-binary)"
+          operator: in
+          values: ["true", "yes"]
+      taskSpec:
+        workspaces:
+          - name: source
+          - name: cache
+        results:
+          - name: artifact-path
+            description: Path to the generated artifact
+        steps:
+          - name: build-release
+            image: rust:slim
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: CARGO_HOME
+                value: $(workspaces.cache.path)
+            script: |
+              # Build in release mode
+              cargo build --release
+
+              # Get package name from Cargo.toml
+              PACKAGE_NAME=$(grep -m 1 "name" Cargo.toml | cut -d '"' -f 2 | tr -d '\r')
+
+              # Create archive
+              mkdir -p artifacts
+              ARTIFACT_PATH="artifacts/${PACKAGE_NAME}-$(uname -m).tar.gz"
+              tar -czf $ARTIFACT_PATH -C target/release $PACKAGE_NAME
+
+              # Export result
+              echo -n $ARTIFACT_PATH > $(results.artifact-path.path)
+      workspaces:
+        - name: source
+          workspace: source-code
+        - name: cache
+          workspace: cargo-cache

@@ -1,0 +1,15 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  pn:
+    cmds:
+      - pnpm nx run-many -t $1 --parallel --max-parallel=10 --prod

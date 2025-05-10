@@ -1,6 +1,12 @@
+
 [workspace]
-resolver = "2"
-members = []
+resolver = '2'
+members = [
+	'apps/cli/tui1',
+	'libs/shared/proc_macros',
+	'libs/shared/mongo_service',
+	'libs/shared/core',
+]
 
 [profile.release]
 lto = true

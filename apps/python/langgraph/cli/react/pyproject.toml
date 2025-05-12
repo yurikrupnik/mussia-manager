@@ -9,14 +9,16 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11,<4.0"
 dependencies = [
-    "langgraph>=0.2.6",
-    "langchain-openai>=0.1.22",
-    "langchain-anthropic>=0.1.23",
-    "langchain>=0.2.14",
-    "langchain-fireworks>=0.1.7",
-    "python-dotenv>=1.0.1",
-    "langchain-tavily>=0.1",
     "langgraph-cli[inmem]>=0.2.10",
+    "langchain-ollama>=0.3.2",
+    "mylibrary",
+    "langchain-tavily>=0.1.6",
+    "python-dotenv>=1.1.0",
+    "langchain-fireworks>=0.3.0",
+    "langchain>=0.3.24",
+    "langchain-anthropic>=0.3.12",
+    "langchain-openai>=0.3.14",
+    "langgraph>=0.3.34",
 ]
 
 [project.optional-dependencies]
@@ -59,6 +61,9 @@ lint.ignore = [
 "tests/*" = ["D", "UP"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.uv.sources]
+mylibrary = { workspace = true }
 
 [dependency-groups]
 dev = [

@@ -8,17 +8,21 @@ from typing import List, Sequence
 REFLECT = "reflect"
 GENERATE = "generate"
 
+
 def generation_node(state: Sequence[BaseMessage]):
-  return generation_chain.invoke({"messages": state})
+    return generation_chain.invoke({"messages": state})
+
 
 def reflection_node(messages: Sequence[BaseMessage]) -> List[BaseMessage]:
-  res = reflection_chain.invoke({"messages": messages})
-  return [HumanMessage(content=res.content)]
+    res = reflection_chain.invoke({"messages": messages})
+    return [HumanMessage(content=res.content)]
+
 
 def should_continue(state: List[BaseMessage]):
-  if len(state) > 3:
-    return END
-  return REFLECT
+    if len(state) > 3:
+        return END
+    return REFLECT
+
 
 builder = MessageGraph()
 builder.add_node(GENERATE, generation_node)
@@ -31,13 +35,14 @@ graph = builder.compile()
 print(graph.get_graph().draw_mermaid())
 graph.get_graph().print_ascii()
 
+
 def main():
     # Get the current file's directory and find the .env file
     current_dir = pathlib.Path(__file__).parent
     dotenv_path = current_dir / ".env"
     initialize_environment(str(dotenv_path))
     inputs = HumanMessage(
-      content="""
+        content="""
         Make this tweet better:
         @LangChainAI
         - newly Tool Calling feature is a seriously underrated.
@@ -47,6 +52,7 @@ def main():
     )
     response = graph.invoke(inputs)
     print(response)
+
 
 if __name__ == "__main__":
     main()

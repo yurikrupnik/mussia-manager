@@ -9,13 +9,15 @@ from typing import Dict, List, Literal, cast
 from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
+from mylibrary import initialize_environment
 
-from react_agent.configuration import Configuration
-from react_agent.state import InputState, State
-from react_agent.tools import TOOLS
-from react_agent.utils import load_chat_model
+from .configuration import Configuration
+from .state import InputState, State
+from .tools import TOOLS
+from .utils import load_chat_model
 
 # Define the function that calls the model
+initialize_environment()
 
 
 async def call_model2(state: State) -> Dict[str, List[AIMessage]]:

@@ -34,6 +34,10 @@ members = [
   "apps/python/langgraph/module3",
   "apps/python/langgraph/module4",
   "apps/python/langgraph/cli/react",
+  "apps/python/langgraph/cli/project",
+  "apps/python/langgraph/cli/memory",
+  "apps/python/langgraph/cli/data-enrichment",
+  "apps/python/langgraph/cli/retrieval",
 
 ]
 

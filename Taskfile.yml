@@ -15,7 +15,7 @@ tasks:
       - pnpm nx run-many -t $1 --parallel --max-parallel=10 --prod
   test-repo:
     cmds:
-      - uv sync
+      - uv sync --all-packages
       - uv venv
       - uv pip install .
       - cd apps/python/langgraph/cli/react && /Users/yurikrupnik/projects/mussia-manager/.venv/bin/langgraph dev

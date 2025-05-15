@@ -13,6 +13,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "langgraph-api>=0.2.20",
+    "langgraph-cli>=0.2.10",
     "ruff>=0.11.4",
 ]
 
@@ -33,12 +35,7 @@ members = [
   "apps/python/langgraph/module2",
   "apps/python/langgraph/module3",
   "apps/python/langgraph/module4",
-  "apps/python/langgraph/cli/react",
-  "apps/python/langgraph/cli/project",
-  "apps/python/langgraph/cli/memory",
-  "apps/python/langgraph/cli/data-enrichment",
-  "apps/python/langgraph/cli/retrieval",
-
+  "apps/python/langgraph/cli/react"
 ]
 
 #[tool.uv.sources]
@@ -51,8 +48,8 @@ members = [
 #requires = ["hatchling"]
 #build-backend = "hatchling.build"
 
-#[tool.ruff]
-#line-length = 79
+[tool.ruff]
+line-length = 79
 
 [tool.ruff.lint]
 extend-select = ["E", "W"]

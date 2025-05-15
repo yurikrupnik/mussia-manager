@@ -1064,6 +1064,8 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "langgraph-api" },
+    { name = "langgraph-cli" },
     { name = "ruff" },
 ]
 
@@ -1071,7 +1073,11 @@ dev = [
 requires-dist = [{ name = "fastapi", specifier = ">=0.115.12" }]
 
 [package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.11.4" }]
+dev = [
+    { name = "langgraph-api", specifier = ">=0.2.20" },
+    { name = "langgraph-cli", specifier = ">=0.2.10" },
+    { name = "ruff", specifier = ">=0.11.4" },
+]
 
 [[package]]
 name = "mylibrary"

@@ -35,7 +35,9 @@ members = [
   "apps/python/langgraph/module2",
   "apps/python/langgraph/module3",
   "apps/python/langgraph/module4",
-  "apps/python/langgraph/cli/react"
+  "apps/python/langgraph/cli/react",
+  "apps/python/langgraph/cli/custom-testing-agent",
+  "apps/python/adk/adk-test1",
 ]
 
 #[tool.uv.sources]

@@ -1,0 +1,15 @@
+Artificial Intelligence (AI) is a wide-ranging branch of computer science concerned with building smart machines capable of performing tasks that typically require human intelligence. These tasks include learning, problem-solving, decision-making, perception, and language understanding.
+
+Natural Language Processing (NLP) is a subfield of artificial intelligence that focuses on enabling computers to understand, interpret, and generate human language. NLP techniques are used in various applications, such as machine translation, chatbots, and sentiment analysis.
+
+Machine Learning (ML) is a subset of artificial intelligence that allows computer systems to learn from data without being explicitly programmed. ML algorithms can identify patterns in data, make predictions, and improve their performance over time.
+
+Deep Learning (DL) is a type of machine learning that uses artificial neural networks with multiple layers to analyze complex data. Deep learning has achieved significant breakthroughs in areas like image recognition, speech recognition, and natural language processing.
+
+The capital of France is Paris. It is the most populous city in France and serves as its cultural, economic, and political center. Paris is famous for its landmarks such as the Eiffel Tower, the Louvre Museum, and Notre-Dame Cathedral.
+
+The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It was named after the engineer Gustave Eiffel, whose company designed and built the tower. Constructed from 1887 to 1889 as the centerpiece of the 1889 World's Fair, it has become a global icon of France and one of the most recognizable structures in the world.
+
+The Louvre Museum, located in Paris, is one of the world's largest and most visited art museums. It is housed in the Louvre Palace, originally built as a fortress in the late 12th century. The museum's collection includes masterpieces such as the Mona Lisa and the Venus de Milo.
+
+The Mona Lisa is a 16th-century oil painting attributed to Italian polymath Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as "the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world." It is housed in the Louvre Museum in Paris.
